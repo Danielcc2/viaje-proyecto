@@ -140,7 +140,6 @@ export default function DestinosPage() {
 
   // Estado para filtros
   const [selectedContinent, setSelectedContinent] = useState('Todos');
-  const [selectedRegion, setSelectedRegion] = useState('Todos');
   const [searchTerm, setSearchTerm] = useState('');
 
   // Imprimir una marca de depuración cuando cambia el continente seleccionado
@@ -162,29 +161,6 @@ export default function DestinosPage() {
 
   // Lista de continentes disponibles
   const availableContinents = ['Todos', ...Object.keys(continents), 'Otros'];
-
-  // Lista de países disponibles según el continente seleccionado
-  const availableCountries = () => {
-    if (selectedContinent === 'Todos') {
-      return ['Todos', ...new Set(destinations.map(dest => dest.country))];
-    } else if (selectedContinent === 'Otros') {
-      // Países que no están en ningún continente definido
-      return ['Todos', ...new Set(destinations
-        .filter(dest => !Object.values(continents).flat().includes(dest.country))
-        .map(dest => dest.country))];
-    } else {
-      // Países del continente seleccionado que existen en los destinos
-      const continentCountries = continents[selectedContinent] || [];
-      return ['Todos', ...new Set(destinations
-        .filter(dest => continentCountries.includes(dest.country))
-        .map(dest => dest.country))];
-    }
-  };
-
-  // Cuando cambia el continente, resetear la región
-  useEffect(() => {
-    setSelectedRegion('Todos');
-  }, [selectedContinent]);
 
   // Filtrar destinos
   const filteredDestinations = destinations.filter(destination => {
@@ -297,7 +273,6 @@ export default function DestinosPage() {
               <button
                 onClick={() => {
                   setSelectedContinent('Todos');
-                  setSelectedRegion('Todos');
                   setSearchTerm('');
                 }}
                 className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"

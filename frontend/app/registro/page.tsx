@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
@@ -13,10 +13,25 @@ export default function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const router = useRouter();
-  const { register, error } = useAuth();
+  const { register, error, clearError } = useAuth();
+  
+  // Limpiar errores al desmontar el componente
+  useEffect(() => {
+    return () => {
+      clearError();
+    };
+  }, [clearError]);
+
+  // Actualizar el mensaje de error local cuando cambia el error del contexto
+  useEffect(() => {
+    if (error) {
+      setErrorMessage(error);
+    }
+  }, [error]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    clearError(); // Limpiar errores previos
     
     if (!email || !password || !confirmPassword) {
       setErrorMessage('Por favor, completa todos los campos.');
@@ -40,10 +55,7 @@ export default function RegisterPage() {
       const success = await register(email, password);
       
       if (success) {
-        // Redireccionar al usuario a la página principal o a completar su perfil
         router.push('/');
-      } else {
-        setErrorMessage(error || 'Error al registrarse. Por favor, inténtalo de nuevo.');
       }
     } catch (err) {
       setErrorMessage('Error al registrarse. Por favor, inténtalo de nuevo más tarde.');

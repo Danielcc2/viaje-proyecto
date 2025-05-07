@@ -22,6 +22,8 @@ interface AuthContextType {
   register: (email: string, password: string, first_name?: string, last_name?: string) => Promise<boolean>;
   isAuthenticated: boolean;
   isLoading: boolean;
+  error: string | null;
+  clearError: () => void;
 }
 
 // Crear el contexto
@@ -43,6 +45,9 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
+  // Función para limpiar errores
+  const clearError = () => setError(null);
 
   // Comprobar si hay una sesión activa al cargar la página
   useEffect(() => {
@@ -176,17 +181,16 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     router.push('/');
   };
 
-  // Calcular si el usuario está autenticado
-  const isAuthenticated = !!user && !!token;
-
   const value = {
     user,
     token,
     login,
     register,
     logout,
-    isAuthenticated,
-    isLoading: loading
+    isAuthenticated: !!user && !!token,
+    isLoading: loading,
+    error,
+    clearError
   };
 
   return (

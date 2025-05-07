@@ -243,8 +243,8 @@ export default function DestinationPage() {
                 }
               }
             }
-          } catch (e) {
-            console.error('Error al leer la respuesta:', e);
+          } catch (_) {
+            console.error('Error al leer la respuesta');
           }
           
           if (response.status === 403) {
@@ -255,9 +255,10 @@ export default function DestinationPage() {
           
           throw new Error(errorDetail);
         }
-      } catch (err: any) {
+      } catch (err: Error | unknown) {
         console.error('Error al eliminar:', err);
-        setError(`Error al eliminar el destino: ${err.message}`);
+        const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
+        setError(`Error al eliminar el destino: ${errorMessage}`);
       }
     }
   };
@@ -428,8 +429,8 @@ export default function DestinationPage() {
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className="object-cover"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
+                        onError={(event) => {
+                          const target = event.target as HTMLImageElement;
                           target.src = '/images/destinos/default.jpg';
                         }}
                       />

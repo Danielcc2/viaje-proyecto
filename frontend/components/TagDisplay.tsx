@@ -31,23 +31,27 @@ const TagDisplay: React.FC<TagDisplayProps> = ({
   return (
     <div className={`flex flex-wrap gap-2 ${className}`}>
       {tags.map(tag => {
-        const TagComponent = withLinks && !onClick ? Link : 'span';
-        const props = withLinks && !onClick ? { 
-          href: `/categorias/${tag.slug}`,
-          key: tag.id,
-          className: "bg-teal-50 text-teal-700 px-3 py-1 rounded-full text-sm hover:bg-teal-100 transition-colors cursor-pointer"
-        } : {
-          key: tag.id,
-          onClick: onClick ? () => onClick(tag) : undefined,
-          className: "bg-teal-50 text-teal-700 px-3 py-1 rounded-full text-sm hover:bg-teal-100 transition-colors cursor-pointer"
-        };
-        
-        return (
-          // @ts-ignore - Link expects href but span doesn't
-          <TagComponent {...props}>
-            {capitalizeText(tag.name)}
-          </TagComponent>
-        );
+        if (withLinks && !onClick) {
+          return (
+            <Link 
+              key={tag.id}
+              href={`/categorias/${tag.slug}`}
+              className="bg-teal-50 text-teal-700 px-3 py-1 rounded-full text-sm hover:bg-teal-100 transition-colors cursor-pointer"
+            >
+              {capitalizeText(tag.name)}
+            </Link>
+          );
+        } else {
+          return (
+            <span
+              key={tag.id}
+              onClick={onClick ? () => onClick(tag) : undefined}
+              className="bg-teal-50 text-teal-700 px-3 py-1 rounded-full text-sm hover:bg-teal-100 transition-colors cursor-pointer"
+            >
+              {capitalizeText(tag.name)}
+            </span>
+          );
+        }
       })}
     </div>
   );

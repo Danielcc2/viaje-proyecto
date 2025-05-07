@@ -25,7 +25,7 @@ const imageExists = async (url: string): Promise<boolean> => {
       const exists = response.ok;
       cache.setItem(`img_exists_${url}`, exists.toString());
       return exists;
-    } catch (error) {
+    } catch {
       cache.setItem(`img_exists_${url}`, 'false');
       return false;
     }
@@ -35,7 +35,7 @@ const imageExists = async (url: string): Promise<boolean> => {
   try {
     const response = await fetch(url, { method: 'HEAD' });
     return response.ok;
-  } catch (error) {
+  } catch {
     return false;
   }
 };
@@ -82,7 +82,6 @@ const ArticleCard = ({
   continent
 }: ArticleCardProps) => {
   const [imageToUse, setImageToUse] = useState<string | null>(null);
-  const [imageLoaded, setImageLoaded] = useState(false);
   
   // Formatear la fecha
   const formattedDate = new Date(created_at).toLocaleDateString('es-ES', {
@@ -115,7 +114,7 @@ const ArticleCard = ({
         }
         
         // Extraer una posible palabra clave del slug o título para buscar imagen relacionada
-        const normalizeText = (text: any): string => {
+        const normalizeText = (text: string | null | undefined): string => {
           if (text === null || text === undefined) return '';
           
           // Convertir a string explícitamente cualquier tipo de valor
@@ -183,8 +182,8 @@ const ArticleCard = ({
         
         // Usar la imagen por defecto
         setImageToUse('/images/destinos/default.jpg');
-      } catch (error) {
-        console.error('Error al determinar la imagen:', error);
+      } catch {
+        console.error('Error al determinar la imagen');
         setImageToUse('/images/destinos/default.jpg');
       }
     };
@@ -202,7 +201,6 @@ const ArticleCard = ({
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover"
-            onLoad={() => setImageLoaded(true)}
             onError={() => {
               console.log(`Error cargando imagen para: ${title}`);
               // Si la imagen principal falla, intentar con una imagen por defecto

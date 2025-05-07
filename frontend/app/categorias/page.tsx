@@ -10,6 +10,12 @@ interface Tag {
   slug: string;
 }
 
+interface Article {
+  id: number;
+  title: string;
+  tags: Tag[];
+}
+
 // Lista de iconos para categorías
 const categoryIcons: Record<string, string> = {
   'playas': '🏖️',
@@ -61,7 +67,7 @@ export default function CategoriesPage() {
             const uniqueTags: Tag[] = [];
             const tagIds = new Set();
             
-            articlesData.results.forEach((article: any) => {
+            articlesData.results.forEach((article: Article) => {
               article.tags.forEach((tag: Tag) => {
                 if (!tagIds.has(tag.id)) {
                   tagIds.add(tag.id);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
@@ -13,6 +13,13 @@ export default function LoginPage() {
   
   const router = useRouter();
   const { login, error } = useAuth();
+  
+  // Actualizar el mensaje de error local cuando cambia el error del contexto
+  useEffect(() => {
+    if (error) {
+      setErrorMessage(error);
+    }
+  }, [error]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,8 +38,9 @@ export default function LoginPage() {
       if (success) {
         // Redireccionar al usuario a la página principal
         router.push('/');
-      } else {
-        setErrorMessage(error || 'Credenciales incorrectas. Por favor, inténtalo de nuevo.');
+      } else if (!error) {
+        // Usar el error del contexto, pero si no hay uno específico, mostrar un mensaje genérico
+        setErrorMessage('Credenciales incorrectas. Por favor, inténtalo de nuevo.');
       }
     } catch (err) {
       setErrorMessage('Error al iniciar sesión. Por favor, inténtalo de nuevo más tarde.');

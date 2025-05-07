@@ -201,7 +201,7 @@ export default function ArticulosPage() {
     };
     
     fetchData();
-  }, [selectedTags, searchTerm]);
+  }, [selectedTags, searchTerm, articles.length]);
   
   // Función para alternar tags seleccionados
   const toggleTag = (slug: string) => {
