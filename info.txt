@@ -1,0 +1,11 @@
+Copia de seguridad del Blog de Viajes
+Fecha: 2025-05-05
+
+Esta copia incluye:
+- Frontend (Next.js)
+- Backend (Django)
+- Archivos de configuración
+
+Para restaurar esta copia:
+1. Copiar los directorios backend y frontend a su ubicación original
+2. Reiniciar los servicios con docker-compose up -d (si aplica)
